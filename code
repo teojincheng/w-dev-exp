@@ -1,0 +1,119 @@
+
+@Html.DevExpress().GridView(settings =>
+{
+    settings.Name = "GridView";
+    settings.CallbackRouteValues = new { Controller = "Adaptivity", Action = "ResponsiveLayoutPagePartial" };
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.EnableRowsCache = false;
+
+    settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+    settings.Settings.VerticalScrollableHeight = 500;
+
+    settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCells;
+    settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = true;
+    settings.SettingsBehavior.AllowEllipsisInText = true;
+    settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+    settings.CommandColumn.Visible = true;
+    settings.CommandColumn.ShowNewButtonInHeader = true;
+    settings.CommandColumn.ShowDeleteButton = true;
+    settings.CommandColumn.ShowEditButton = true;
+    settings.CommandColumn.AdaptivePriority = 3;
+    settings.CommandColumn.MinWidth = 100;
+    settings.CommandColumn.MaxWidth = 160;
+    settings.CommandColumn.Width = System.Web.UI.WebControls.Unit.Percentage(18);
+
+    settings.Columns.Add("id");
+    settings.Columns.Add("abs");
+    settings.Columns.Add("bosch");
+    settings.Columns.Add("cac");
+    settings.Columns.Add("domin");
+    settings.Columns.Add("ef");
+    settings.Columns.Add("ghr");
+    settings.Columns.Add("hos");
+    settings.Columns.Add("ice");
+    settings.Columns.Add("jog");
+    settings.Columns.Add("ken");
+    settings.Columns.Add("lan");
+    settings.Columns.Add("mon");
+    settings.Columns.Add("oop");
+    settings.Columns.Add("qwe");
+    settings.Columns.Add("rty");
+    settings.Columns.Add("samsara");
+    settings.Columns.Add("ttt");
+    settings.Columns.Add("ueighty");
+    settings.Columns.Add("vim");
+    settings.Columns.Add("wim");
+}).Bind(Model).GetHtml()
+
+
+
+@{ Layout = null; }
+@model IEnumerable<exampleDE.Models.Item>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0" />
+    <title>Responsive Layout - ASP.NET MVC GridView Extension</title>
+    <style>
+        body, form {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            min-height: 200px;
+            min-width: 400px;
+        }
+
+        .grid {
+            margin: 0 auto;
+        }
+    </style>
+    <script type="text/javascript">
+        function UpdateGridHeight() {
+            GridView.SetHeight(0);
+            var containerHeight = ASPxClientUtils.GetDocumentClientHeight();
+            if (document.body.scrollHeight > containerHeight)
+                containerHeight = document.body.scrollHeight;
+            GridView.SetHeight(containerHeight);
+        }
+
+        window.addEventListener('resize', function(evt) {
+            if(ASPxClientUtils && !ASPxClientUtils.androidPlatform)
+                return;
+            var activeElement = document.activeElement;
+            if(activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA") && activeElement.scrollIntoViewIfNeeded)
+                window.setTimeout(function() { activeElement.scrollIntoViewIfNeeded(); }, 0);
+        });
+    </script>
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionType = ExtensionType.GridView }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionType = ExtensionType.GridView }
+    )
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.Partial("ResponsiveLayoutPagePartial", Model)
+    }
+    <script type="text/javascript">
+        ASPxClientControl.GetControlCollection().ControlsInitialized.AddHandler(function (s, e) {
+            UpdateGridHeight();
+        });
+        ASPxClientControl.GetControlCollection().BrowserWindowResized.AddHandler(function (s, e) {
+            UpdateGridHeight();
+        });
+    </script>
+</body>
+</html>
+
+  public ActionResult ResponsiveLayoutPage()
+        {
+            return View("ResponsiveLayoutPage", db.Items.ToList());
+        }
+
+        public ActionResult ResponsiveLayoutPagePartial()
+        {
+            return PartialView("ResponsiveLayoutPagePartial", db.Items.ToList());
+        }
