@@ -1,0 +1,86 @@
+@model exampleDE.Models.Item
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@functions{
+    private void AssignTextBoxSettings(TextBoxSettings s)
+    {
+        s.ShowModelErrors = true;
+        s.ControlStyle.CssClass = "maxWidth";
+        s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.Text;
+        s.Properties.ValidationSettings.ErrorTextPosition = ErrorTextPosition.Bottom;
+        s.Properties.ValidationSettings.Display = Display.Dynamic;
+        s.Properties.ValidationSettings.ErrorFrameStyle.Wrap = DefaultBoolean.True;
+    }
+}
+
+@Html.DevExpress().GetStyleSheets(
+      new StyleSheet { ExtensionType = ExtensionType.FormLayout },
+      new StyleSheet { ExtensionType = ExtensionType.TextBox },
+      new StyleSheet { ExtensionType = ExtensionType.DateEdit }
+  )
+
+
+@Html.DevExpress().GetScripts(
+        new Script { ExtensionType = ExtensionType.FormLayout },
+        new Script { ExtensionType = ExtensionType.TextBox },
+        new Script { ExtensionType = ExtensionType.DateEdit }
+    )
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Item</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.DevExpress().FormLayout(settings => {
+       settings.Name = "detailFormLayout";
+
+
+       settings.Items.AddGroupItem(g => {
+
+           g.Items.Add(m => m.abs, i =>
+           {
+               i.NestedExtension().TextBox(s => AssignTextBoxSettings(s));
+           });
+
+           g.Items.Add(m => m.bosch, i =>
+           {
+               i.NestedExtension().TextBox(s => AssignTextBoxSettings(s));
+           });
+
+
+
+
+       });
+   }).GetHtml();
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+}
